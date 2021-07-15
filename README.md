@@ -13,7 +13,7 @@ A Mongoose StorageEngine for [ASS](https://github.com/tycrek/ass) (A ShareX Serv
   "useNewUrlParser": true,
   "useUnifiedTopology": true,
   ...,
- }
+ },
  "model": "your-imported-model-name"
 }
 ```
