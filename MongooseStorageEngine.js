@@ -154,9 +154,9 @@ class MongooseStorageEngine extends StorageEngine {
  init() {
   return new Promise((resolve, reject) => {
    // Get the options 
-   const { host, database, mongooseOpts } = this.#options;
+   const { host, port, database, mongooseOpts } = this.#options;
    // Connect to the Mongoose database
-   MongooseStorageEngine.connection = mongoose.connect(`${host}${database}`, mongooseOpts).then(
+   MongooseStorageEngine.connection = mongoose.connect(`${host}:${port}/${database}`, mongooseOpts).then(
     () => resolve(`Connected to Mongoose database ${database}`),
     (err) => reject(err));
   });
