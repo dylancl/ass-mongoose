@@ -13,7 +13,7 @@ const TIMEOUTS = {
  */
 
 const OPTIONS = {
- host: 'mongodb://...',
+ host: 'mongodb://localhost',
  port: 27017,
  database: 'myFirstDatabase',
  mongooseOpts: {
@@ -42,7 +42,7 @@ function get(resourceId) {
     if (!result) {
      throw new KeyNotFoundError(`Resource ${resourceId} not found`);
     }
-    resolve([resourceId, result]);
+    resolve(result);
    }
   } catch (err) {
    reject(err);
@@ -61,11 +61,13 @@ function put(resourceId, data) {
   try {
    const resourceData = await MongooseStorageEngine.model.findOne({ resourceId });
    if (resourceData) {
-    await MongooseStorageEngine.model.updateOne({ resourceId }, { $set: { data } });
+    await MongooseStorageEngine.model.updateOne({ resourceId }, { $set: data });
+    resolve(`Succesfully updated item with resourceId ${resourceId}`);
    } else {
-    await MongooseStorageEngine.model.create({ resourceId, data });
+    data.resourceId = resourceId;
+    await MongooseStorageEngine.model.create(data);
+    resolve(`Succesfully created item with resourceId ${resourceId}`);
    }
-   resolve();
   } catch (err) {
    reject(err);
   }
@@ -89,20 +91,15 @@ function has(resourceId) {
 }
 
 /**
- * Delete singular data item or all items from the database
+ * Delete singular data item from the model
  * @param {string} resourceId The resource id
  * @returns {Promise<void>}
  */
 function del(resourceId) {
  return new Promise(async (resolve, reject) => {
   try {
-   if (!resourceId) {
-    await MongooseStorageEngine.model.deleteMany({});
-    resolve(`Succesfully deleted all items`);
-   } else {
-    await MongooseStorageEngine.model.deleteOne({ resourceId });
-    resolve(`Succesfully deleted item with resourceId ${resourceId}`);
-   }
+   await MongooseStorageEngine.model.deleteOne({ resourceId });
+   resolve(`Succesfully deleted item with resourceId ${resourceId}`);
   } catch (err) {
    reject(err);
   }
@@ -160,11 +157,12 @@ class MongooseStorageEngine extends StorageEngine {
     resolve(`Connected to Mongoose database ${database}`);
    } catch (error) {
     reject(error);
-   }});
+   }
+  });
  }
 
  /**
-  * Get the number of keys in the database
+  * Get the number of keys in the model
   * @returns {number} The number of keys
   */
  get size() { return this.#size(); }
@@ -178,7 +176,7 @@ class MongooseStorageEngine extends StorageEngine {
  }
 
  /**
-  * Migrate function takes the existing and adds all entries to the database.
+  * Migrate function takes the existing and adds all entries to the model.
   * @param {*[]} data The existing data
   * @returns {Promise<*>}
   */
@@ -187,6 +185,22 @@ class MongooseStorageEngine extends StorageEngine {
    Promise.all(data.map(([key, value]) => has(key).then((exists) => !exists && put(key, value))))
     .then((results) => resolve(`${results.length} entries migrated`))
     .catch(reject);
+  });
+ }
+
+
+ /**
+  * Delete all data from the model
+  * @returns {Promise<*>}
+  */
+ deleteAll() {
+  return new Promise(async (resolve, reject) => {
+   try {
+    await MongooseStorageEngine.model.deleteMany({});
+    resolve(`Succesfully deleted all items`);
+   } catch (err) {
+    reject(err);
+   }
   });
  }
 
