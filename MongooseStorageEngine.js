@@ -8,7 +8,6 @@ const TIMEOUTS = {
  CONNECT: 5000,
 };
 
-
 /*
  * Default options
  */
@@ -52,7 +51,7 @@ function get(resourceId) {
 }
 
 /**
- * Store resource data in the database
+ * Store or update resource data in the database
  * @param {string} resourceId The resource id
  * @param {string} data The resource data
  * @returns {Promise<void>}
@@ -152,14 +151,16 @@ class MongooseStorageEngine extends StorageEngine {
   * @returns {Promise<*>}
   */
  init() {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
    // Get the options 
    const { host, port, database, mongooseOpts } = this.#options;
    // Connect to the Mongoose database
-   MongooseStorageEngine.connection = mongoose.connect(`${host}:${port}/${database}`, mongooseOpts).then(
-    () => resolve(`Connected to Mongoose database ${database}`),
-    (err) => reject(err));
-  });
+   try {
+    MongooseStorageEngine.connection = await mongoose.connect(`${host}:${port}/${database}`, mongooseOpts);
+    resolve(`Connected to Mongoose database ${database}`);
+   } catch (error) {
+    reject(error);
+   }});
  }
 
  /**
