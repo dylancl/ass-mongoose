@@ -1,6 +1,6 @@
 {
   "name": "ass-mongoose",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A Mongoose StorageEngine for ass (a ShareX Server)",
   "main": "MongooseStorageEngine.js",
   "scripts": {
