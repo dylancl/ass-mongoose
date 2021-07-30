@@ -1,35 +1,36 @@
 # ass-mongoose
-A Mongoose StorageEngine for [ASS](https://github.com/tycrek/ass) (A ShareX Server)
+A Mongoose StorageEngine for [ass](https://github.com/tycrek/ass) (a ShareX Server)
 
 ## Usage
-1. Install with `npm install @dylancl/ass-mongoose`
+
+1. Install with `npm i ass-mongoose`
 2. Create a `config.mongoose.json` file in the root of your project with the following content:
-```json
-{
- "host": "domain.of.mongoose.database",
- "port": 12345,
- "database": "your-db-name",
- "mongooseOpts": {
-  "useNewUrlParser": true,
-  "useUnifiedTopology": true,
-  ...,
- },
- "model": "your-imported-model-name"
-}
-```
+   ```json
+   {
+     "host": "domain.of.mongoose.database",
+     "port": 12345,
+     "database": "your-db-name",
+     "mongooseOpts": {
+       "useNewUrlParser": true,
+       "useUnifiedTopology": true,
+       ...,
+     },
+     "model": "your-imported-model-name"
+   }
+   ```
 
 | Key | Description |
-  | --- | --- |
-  | `host` | Hostname of the Mongoose server |
-  | `port` | Port of the Mongoose server |
-  | `database` | Name of the Mongoose database |
-  | `mongooseOpts` | An object of Mongoose options |
-  | `model` | The model of the data schema |
+| --- | --- |
+| `host` | Hostname of the server |
+| `port` | Port of the server |
+| `database` | Name of the database |
+| `mongooseOpts` | An object of Mongoose options |
+| `model` | The model of the data schema |
 
-3. Add `@dylancl/ass-mongoose` to `data.js` using `require` & create a new instance of `MongooseStorageEngine`:
+3. Add `ass-mongoose` to `data.js` using `require` & create a new instance of `MongooseStorageEngine`:
   ```js
   // Import the package
-  const { MongooseStorageEngine } = require('@dylancl/ass-psql');
+  const { MongooseStorageEngine } = require('ass-mongoose');
 
   // Import the options
   const { host, port, database, mongooseOpts, model } = require('./config.mongoose.json');
@@ -67,8 +68,8 @@ const { JsonStorageEngine } = require('@tycrek/ass-storage-engine');
 const dataOld = new JsonStorageEngine();
 
 // Import the new StorageEngine & options
-const { MongooseStorageEngine } = require('@tycrek/ass-psql');
-const { sslPath, host, port, username, password, database } = require('./auth.psql.json');
+const { MongooseStorageEngine } = require('ass-mongoose');
+const { host, port, database, mongooseOpts, model } = require('./config.mongoose.json');
 
 // Create a new instance of the MongooseStorageEngine
 const data = new MongooseStorageEngine({ /* ... */ });
@@ -100,4 +101,3 @@ data.deleteTable()
 ```
 
 **This will immediatly delete your table,** use with caution! The table will automatically be created when you call `data.init()` again.
-

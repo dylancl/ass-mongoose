@@ -1,8 +1,8 @@
 {
   "name": "ass-mongoose",
   "version": "1.0.0",
-  "description": "A Mongoose StorageEngine for ASS (A ShareX Server)",
-  "main": "index.js",
+  "description": "A Mongoose StorageEngine for ass (a ShareX Server)",
+  "main": "MongooseStorageEngine.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
